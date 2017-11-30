@@ -1,4 +1,4 @@
-package tikape.runko.database;
+package tikape.harjoitus.database;
 
 import java.sql.*;
 import java.util.ArrayList;
