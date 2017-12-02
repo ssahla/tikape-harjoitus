@@ -23,103 +23,99 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
     }
 
     @Override
-    public AnnosRaakaAine findOne(Integer key) throws SQLException {
+    public AnnosRaakaAine haeYksi(Integer key) throws SQLException {
+        // ei toteutettu
         return null;
     }
 
     public Boolean raakaAineOnAnnoksessa(Integer aId, Integer rId) throws SQLException {
-        Connection connection = tk.yhteys();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM AnnosRaakaAine "
+        Connection conn = tk.yhteys();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM AnnosRaakaAine "
                 + "WHERE raaka_aine_id = ? AND annos_id = ?");
         stmt.setInt(1, rId);
         stmt.setInt(2, aId);
-        ResultSet rs = stmt.executeQuery();
-        Boolean result = rs.next();
-        rs.close();
+        ResultSet res = stmt.executeQuery();
+        Boolean result = res.next();
+        res.close();
         stmt.close();
-        connection.close();
+        conn.close();
         return result;
     }
 
     @Override
-    public List<AnnosRaakaAine> findAll() throws SQLException {
+    public List<AnnosRaakaAine> haeKaikki() throws SQLException {
 
-        Connection connection = tk.yhteys();
-        PreparedStatement stmt = connection.prepareStatement("SELECT * FROM AnnosRaakaAine");
+        Connection conn = tk.yhteys();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM AnnosRaakaAine");
 
-        ResultSet rs = stmt.executeQuery();
+        ResultSet res = stmt.executeQuery();
         List<AnnosRaakaAine> AnnosRaakaAineet = new ArrayList<>();
-        while (rs.next()) {
-            Integer raakaAine_id = rs.getInt("raaka_aine_id");
-            Integer annos_id = rs.getInt("annos_id");
-            Integer jarjestys = rs.getInt("jarjestys");
-            String maara = rs.getString("maara");
-            String ohje = rs.getString("ohje");
-
-            AnnosRaakaAineet.add(new AnnosRaakaAine(raakaAine_id, annos_id, jarjestys, maara, ohje));
+        while (res.next()) {
+            Integer raakaAine_id = res.getInt("raaka_aine_id");
+            Integer annos_id = res.getInt("annos_id");
+            Integer jarjestys = res.getInt("jarjestys");
+            String maara = res.getString("maara");
+            String ohje = res.getString("ohje");
+            AnnosRaakaAineet.add(new AnnosRaakaAine(raakaAine_id, annos_id, jarjestys, maara, ohje, ""));
         }
 
-        rs.close();
+        res.close();
         stmt.close();
-        connection.close();
+        conn.close();
 
         return AnnosRaakaAineet;
     }
 
-    public List<AnnosRaakaAine> findAllByAnnos(Integer annos_id) throws SQLException {
+    public List<AnnosRaakaAine> haeKaikkiAnnoksella(Integer annos_id) throws SQLException {
 
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM AnnosRaakaAine"
                 + " WHERE annos_id = ? ORDER BY jarjestys");
         stmt.setInt(1, annos_id);
 
-        ResultSet rs = stmt.executeQuery();
+        ResultSet res = stmt.executeQuery();
         List<AnnosRaakaAine> AnnosRaakaAineet = new ArrayList<>();
-        while (rs.next()) {
-            Integer raakaAine_id = rs.getInt("raaka_aine_id");
-//            Integer annos_id = rs.getInt("annos_id"); 
-            Integer jarjestys = rs.getInt("jarjestys");
-            String maara = rs.getString("maara");
-            String ohje = rs.getString("ohje");
-//            System.out.println("'" + raakaAine_id); tulee oikein
-            
-
-            AnnosRaakaAineet.add(new AnnosRaakaAine(annos_id, raakaAine_id, jarjestys, maara, ohje));
+        while (res.next()) {
+            Integer raakaAine_id = res.getInt("raaka_aine_id");
+            Integer jarjestys = res.getInt("jarjestys");
+            String maara = res.getString("maara");
+            String ohje = res.getString("ohje");
+            AnnosRaakaAineet.add(new AnnosRaakaAine(annos_id, raakaAine_id, jarjestys, maara, ohje, ""));
         }
 
-        rs.close();
+        res.close();
         stmt.close();
         conn.close();
 
         return AnnosRaakaAineet;
     }
 
-    public List<AnnosRaakaAine> findAllByRaakaAine(Integer raakaAine_id) throws SQLException {
+    public List<AnnosRaakaAine> haeKaikkiRaakaAineella(Integer raakaAine_id) throws SQLException {
 
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM AnnosRaakaAine"
                 + " WHERE raaka_aine_id = ?");
         stmt.setInt(1, raakaAine_id);
 
-        ResultSet rs = stmt.executeQuery();
+        ResultSet res = stmt.executeQuery();
         List<AnnosRaakaAine> AnnosRaakaAineet = new ArrayList<>();
-        while (rs.next()) {
-            Integer annos_id = rs.getInt("annos_id");
-            Integer jarjestys = rs.getInt("jarjestys");
-            String maara = rs.getString("maara");
-            String ohje = rs.getString("ohje");
-
-            AnnosRaakaAineet.add(new AnnosRaakaAine(annos_id, raakaAine_id, jarjestys, maara, ohje));
+        while (res.next()) {
+            Integer annos_id = res.getInt("annos_id");
+            Integer jarjestys = res.getInt("jarjestys");
+            String maara = res.getString("maara");
+            String ohje = res.getString("ohje");
+            AnnosRaakaAineet.add(new AnnosRaakaAine(annos_id, raakaAine_id, jarjestys, maara, ohje, ""));
         }
 
-        rs.close();
+        res.close();
         stmt.close();
         conn.close();
 
         return AnnosRaakaAineet;
     }
 
-    public Integer latestOrderNumberByAnnos(Integer annos_id) throws SQLException {
+    public Integer viimeisinJarjestysAnnoksella(Integer annos_id) throws SQLException {
+        // palauttaa suurimman järjestysnumeron annoksen raaka-aineista
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT MAX(jarjestys) AS suurin FROM AnnosRaakaAine WHERE annos_id = ?");
         stmt.setInt(1, annos_id);
@@ -136,11 +132,11 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
 }
     
     @Override
-    public void delete(Integer key) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void poista(Integer key) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void deleteAllByAnnos(Integer annos_id) throws SQLException {
+    public void poistaKaikkiAnnoksella(Integer annos_id) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM AnnosRaakaAine WHERE annos_id = ?");
         stmt.setInt(1, annos_id);
@@ -149,7 +145,7 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
         conn.close();
     }
     
-    public void deleteByAnnosAndRaakaAine(Integer annos_id, Integer raakaAine_id) throws SQLException {
+    public void poistaKaikkiAnnoksellaJaRaakaAineella(Integer annos_id, Integer raakaAine_id) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM AnnosRaakaAine WHERE annos_id = ? "
                         + "AND raaka_aine_id = ?");
@@ -161,7 +157,7 @@ public class AnnosRaakaAineDao implements Dao<AnnosRaakaAine, Integer> {
     }
 
     @Override
-    public void save(AnnosRaakaAine ar) throws SQLException {
+    public void tallenna(AnnosRaakaAine ar) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO AnnosRaakaAine "
                 + "(raaka_aine_id, annos_id, jarjestys, maara, ohje) VALUES (?, ?, ?, ?, ?)");

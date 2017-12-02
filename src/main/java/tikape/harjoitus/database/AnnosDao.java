@@ -22,42 +22,42 @@ public class AnnosDao implements Dao<Annos, Integer> {
     }
 
     @Override
-    public Annos findOne(Integer key) throws SQLException {
+    public Annos haeYksi(Integer key) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos WHERE id = ?");
         stmt.setInt(1, key);
 
-        ResultSet rs = stmt.executeQuery();
-        if (!rs.next()) {
+        ResultSet res = stmt.executeQuery();
+        if (!res.next()) {
             return null;
         }
 
-        Integer id = rs.getInt("id");
-        String nimi = rs.getString("nimi");
+        Integer id = res.getInt("id");
+        String nimi = res.getString("nimi");
 
         Annos a = new Annos(id, nimi);
 
-        rs.close();
+        res.close();
         stmt.close();
         conn.close();
 
         return a;
     }
 
-    public Annos findOneByName(String nimi) throws SQLException {
+    public Annos haeYksiNimella(String nimi) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos WHERE nimi = ?");
         stmt.setString(1, nimi);
 
-        ResultSet rs = stmt.executeQuery();
-        if (!rs.next()) {
+        ResultSet res = stmt.executeQuery();
+        if (!res.next()) {
             return null;
         }
 
-        Integer id = rs.getInt("id");
+        Integer id = res.getInt("id");
         Annos a = new Annos(id, nimi);
 
-        rs.close();
+        res.close();
         stmt.close();
         conn.close();
 
@@ -65,21 +65,21 @@ public class AnnosDao implements Dao<Annos, Integer> {
     }
 
     @Override
-    public List<Annos> findAll() throws SQLException {
+    public List<Annos> haeKaikki() throws SQLException {
 
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Annos ORDER BY nimi");
 
-        ResultSet rs = stmt.executeQuery();
+        ResultSet res = stmt.executeQuery();
         List<Annos> annokset = new ArrayList<>();
-        while (rs.next()) {
-            Integer id = rs.getInt("id");
-            String nimi = rs.getString("nimi");
+        while (res.next()) {
+            Integer id = res.getInt("id");
+            String nimi = res.getString("nimi");
 
             annokset.add(new Annos(id, nimi));
         }
 
-        rs.close();
+        res.close();
         stmt.close();
         conn.close();
 
@@ -87,7 +87,7 @@ public class AnnosDao implements Dao<Annos, Integer> {
     }
 
     @Override
-    public void delete(Integer key) throws SQLException {
+    public void poista(Integer key) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("DELETE FROM Annos WHERE id = ?");
         stmt.setInt(1, key);
@@ -97,7 +97,7 @@ public class AnnosDao implements Dao<Annos, Integer> {
     }
 
     @Override
-    public void save(Annos annos) throws SQLException {
+    public void tallenna(Annos annos) throws SQLException {
         Connection conn = tk.yhteys();
         PreparedStatement stmt = conn.prepareStatement("INSERT INTO Annos (nimi) VALUES (?)");
         stmt.setString(1, annos.getNimi());

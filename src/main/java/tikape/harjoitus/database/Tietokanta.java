@@ -16,27 +16,24 @@ public class Tietokanta {
         return DriverManager.getConnection(databaseAddress);
     }
 
-    public void init() {
+    public void alusta() {
         List<String> lauseet = sqliteLauseet();
 
-        // "try with resources" sulkee resurssin automaattisesti lopuksi
         try (Connection conn = yhteys()) {
             Statement st = conn.createStatement();
 
-            // suoritetaan komennot
             for (String lause : lauseet) {
                 st.executeUpdate(lause);
             }
 
         } catch (Throwable t) {
-            // jos tietokantataulu on jo olemassa, ei komentoja suoriteta
         }
     }
 
     private List<String> sqliteLauseet() {
         ArrayList<String> lista = new ArrayList<>();
 
-        // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
+        // luodaan tarvittavat taulut, jos niitä ei jo ole
         lista.add("CREATE TABLE IF NOT EXISTS Annos (" +
                 "id integer PRIMARY KEY, " +
                 "nimi varchar(32))");

@@ -15,13 +15,18 @@ public class AnnosRaakaAine {
     private Integer jarjestys;
     private String maara;
     private String ohje;
-
-    public AnnosRaakaAine(Integer annos_id, Integer raakaAine_id, Integer jarjestys, String maara, String ohje) {
+    
+    // Raaka-aineen nimeä ei tallenneta AnnosRaakaAine-tauluun, mutta tässä luokassa se on mukana, 
+    // jotta luokan avulla voidaan välittää reseptisivulla näytettäväksi smoothien ainesosat nimineen.
+    private String nimi; 
+    
+    public AnnosRaakaAine(Integer annos_id, Integer raakaAine_id, Integer jarjestys, String maara, String ohje, String nimi) {
         this.annos_id = annos_id;
         this.raakaAine_id = raakaAine_id;
         this.jarjestys = jarjestys;
         this.maara = maara;
         this.ohje = ohje;
+        this.nimi = nimi;
     }
 
     public Integer getAnnos_id() {
@@ -42,6 +47,14 @@ public class AnnosRaakaAine {
 
     public String getOhje() {
         return ohje;
+    }
+
+    public String getNimi() {
+        return nimi;
+    }
+
+    public void setNimi(String nimi) {
+        this.nimi = nimi;
     }
     
     

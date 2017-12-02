@@ -10,14 +10,15 @@
         <p><a href="/smoothiet">Smoothiet</a> <a href="/raaka-aineet">Raaka-aineet</a></p>
         <h1><span th:text="${smoothie.nimi}">nimi</span></h1>
         <ol>
-            <li th:each="aine: ${askeleet}">
-               <span th:text="${aine.nimi}">aine</span>, <span th:text="${aine.maara}">maara
-               </span>,  <span th:text="${aine.ohje}">ohje
+            <li th:each="aine: ${ainesosat}">
+               <span th:text="${aine.nimi}">aine</span><span th:if="${aine.maara} != ''" th:text="', ' + ${aine.maara}">maara
+               </span><span th:if="${aine.ohje} != ''" th:text="', ' + ${aine.ohje}">ohje
                </span> <form method="POST" th:action="@{~/smoothiet/{aid}/poista/{rid}(aid=${aine.annos_id}, rid=${aine.raakaAine_id})}">
                     <input type="submit" value="Poista"/>
                 </form>
             </li>
         </ol>
+        
         <h2>Lisää smoothieen uusi ainesosa</h2>
 
         <form method="POST" th:action="@{~/smoothiet/{id}(id=${smoothie.id})}">
@@ -33,4 +34,3 @@
         
     </body>
 </html>
-<!--<span th:text="${aine.nimi}">aine</span>-->

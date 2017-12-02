@@ -5,11 +5,11 @@ import java.util.*;
 
 public interface Dao<T, K> {
 
-    T findOne(K key) throws SQLException;
+    T haeYksi(K key) throws SQLException;
 
-    List<T> findAll() throws SQLException;
+    List<T> haeKaikki() throws SQLException;
 
-    void save(T object) throws SQLException;
+    void tallenna(T object) throws SQLException;
     
-    void delete(K key) throws SQLException;
+    void poista(K key) throws SQLException;
 }
